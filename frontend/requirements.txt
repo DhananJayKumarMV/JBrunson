@@ -9,3 +9,4 @@ anthropic
 # stage 2 — serve (model_server.py): needs Modal auth + deployed apps + SUNO_API_KEY
 modal
 aiohttp
+imageio-ffmpeg  # static ffmpeg used to transcode Suno's Opus-in-MP4 -> browser-playable MP3

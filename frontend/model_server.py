@@ -101,6 +101,38 @@ def _pcm32_to_wav(pcm_bytes: bytes,
     return buf.getvalue()
 
 
+def _to_mp3(audio_bytes: bytes) -> bytes:
+    """Transcode arbitrary audio bytes to MP3 (browser-playable).
+
+    Suno returns Opus-in-MP4, which browsers' <audio> cannot decode. We
+    normalize to MP3 so the 'audio/mpeg' track header is accurate. Uses the
+    static ffmpeg shipped by imageio-ffmpeg (no system ffmpeg required).
+    Blocking — call via run_in_executor from async code.
+
+    FUTURE SCOPE — make this edge-friendly: spawning a bundled ffmpeg binary
+    per clip is heavy for edge/mobile/serverless targets. Options to explore:
+    (1) push decode to the client — ship an Opus/WebM WASM decoder or use
+        WebCodecs so no server transcode is needed; (2) ask Suno for a
+        web-native format (AAC/MP3) up front to skip transcoding entirely;
+        (3) stream-transcode in chunks instead of buffering the whole file;
+        (4) a pure-Python/WASM (e.g. pyodide) path so this runs without a
+        native ffmpeg dependency in constrained environments.
+    """
+    import subprocess
+
+    import imageio_ffmpeg
+
+    ffmpeg = imageio_ffmpeg.get_ffmpeg_exe()
+    proc = subprocess.run(
+        [ffmpeg, "-loglevel", "error", "-i", "pipe:0",
+         "-f", "mp3", "-c:a", "libmp3lame", "-b:a", "128k", "pipe:1"],
+        input=audio_bytes, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+    )
+    if proc.returncode != 0 or not proc.stdout:
+        raise RuntimeError(f"ffmpeg transcode failed: {proc.stderr.decode()[:300]}")
+    return proc.stdout
+
+
 # ── Per-page audio generation ─────────────────────────────────────────────────
 
 async def _gen_stable(n: int) -> None:
@@ -208,8 +240,19 @@ async def _gen_suno(n: int) -> None:
 
             async with session.get(audio_url) as resp:
                 audio_bytes = await resp.read()
+
+            # Suno returns Opus-in-MP4 (mislabeled); browsers can't play it.
+            # Transcode to MP3 so the 'audio/mpeg' track header is correct.
+            try:
+                loop = asyncio.get_running_loop()
+                audio_bytes = await loop.run_in_executor(None, _to_mp3, audio_bytes)
+            except Exception as e:
+                print(f"[page {n}] suno transcode ERROR: {e}", flush=True)
+                suno_wavs[n] = None
+                return
+
             suno_wavs[n] = audio_bytes
-            print(f"[page {n}] suno done ({len(audio_bytes) // 1024} KB)", flush=True)
+            print(f"[page {n}] suno done ({len(audio_bytes) // 1024} KB MP3)", flush=True)
 
     except Exception as e:
         print(f"[page {n}] suno ERROR: {e}", flush=True)
