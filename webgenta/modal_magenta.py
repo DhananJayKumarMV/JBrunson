@@ -14,24 +14,18 @@ Then start the local server pointing at Modal:
 """
 
 import modal
-from pathlib import Path
-
-MRT2_LOCAL = str(Path(__file__).parent.parent / "magenta-realtime")
 
 # ── Persistent volume for model weights (~900 MB, downloaded once) ─────────────
 volume = modal.Volume.from_name("magenta-weights", create_if_missing=True)
 VOLUME_PATH = "/weights"
 CHECKPOINT_DIR = f"{VOLUME_PATH}/magenta-rt-v2"
 
-# ── Container image ────────────────────────────────────────────────────────────
+# ── Container image (installs magenta-rt from PyPI — no local repo needed) ────
 image = (
     modal.Image.debian_slim(python_version="3.11")
-    # Copy local magenta-realtime repo into the image — avoids any GitHub network issues
-    .add_local_dir(MRT2_LOCAL, remote_path="/opt/magenta-realtime", copy=True)
     .run_commands(
-        "pip install -e '/opt/magenta-realtime[jax]'",
-        "pip install -e /opt/magenta-realtime/magenta_rt/_vendor/sequence-layers",
         "pip install huggingface_hub",
+        "pip install 'magenta-rt[jax]'",
         # Upgrade to CUDA-enabled JAX (T4 = CUDA 12)
         "pip install -U 'jax[cuda12]'",
     )

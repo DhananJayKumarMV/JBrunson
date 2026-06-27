@@ -37,7 +37,11 @@ import wave
 from pathlib import Path
 from typing import Literal
 
+import ssl
+import certifi
 import aiohttp
+
+_ssl_ctx = ssl.create_default_context(cafile=certifi.where())
 import fitz  # PyMuPDF
 import numpy as np
 from aiohttp import web
@@ -375,7 +379,7 @@ async def _gen_suno(pdf_n: int) -> None:
     payload = {"style": ANIME_VOICE_STYLE, "lyrics": lyrics, "voice_id": voice_id}
 
     try:
-        async with aiohttp.ClientSession() as session:
+        async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(ssl=_ssl_ctx)) as session:
             async with session.post(f"{SUNO_BASE}/v0/audio", json=payload, headers=headers) as resp:
                 data = await resp.json()
                 if resp.status not in (200, 201, 202):

@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>C.O.S.M.I.C — Pitch Deck</title>
 <style>
-  /* ─────────────────────────────  Palette (from the app UI)  ───────────────────────────── */
   :root{
     --bg:#0e0d10; --bg2:#161519; --surface:#1d211c; --surface2:#222725;
     --border:#2e332d; --accent:#899878; --accent-hi:#e4e6c3; --text:#f7f7f2;
@@ -21,7 +20,6 @@
     overflow:hidden;
   }
 
-  /* ─────────────────────────────  Deck / slide mechanics  ───────────────────────────── */
   .deck{position:fixed;inset:0;display:flex;align-items:center;justify-content:center}
   .slide{
     position:absolute;width:min(1180px,94vw);height:min(680px,92vh);
@@ -37,7 +35,6 @@
     background:linear-gradient(var(--accent),var(--beige));
   }
 
-  /* ─────────────────────────────  Typography  ───────────────────────────── */
   .kicker{color:var(--accent);font-size:.8rem;letter-spacing:.32em;text-transform:uppercase;margin-bottom:14px;font-weight:600}
   h1{font-size:2.05rem;line-height:1.12;letter-spacing:.01em;margin-bottom:10px}
   h2{font-size:1.65rem;line-height:1.15;margin-bottom:18px}
@@ -47,10 +44,7 @@
   .muted{color:var(--muted)}
   .accent{color:var(--accent-hi)}
   b,strong{color:var(--text)}
-  code{font-family:"SF Mono",ui-monospace,Menlo,monospace;background:#0c0f0c;border:1px solid var(--border);
-       border-radius:5px;padding:1px 6px;color:var(--beige);font-size:.86em}
 
-  /* ─────────────────────────────  Reusable blocks  ───────────────────────────── */
   .grid{display:grid;gap:18px}
   .g2{grid-template-columns:1fr 1fr}
   .g3{grid-template-columns:repeat(3,1fr)}
@@ -75,14 +69,14 @@
   .center{align-items:center;justify-content:center;text-align:center}
   .fill{flex:1;display:flex;flex-direction:column;justify-content:center}
 
-  /* ─────────────────────────────  Pipeline flow  ───────────────────────────── */
+  /* Pipeline flow */
   .flow{display:flex;align-items:stretch;gap:0;width:100%}
   .node{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:12px;
-        padding:14px 12px;text-align:center;position:relative}
-  .node .ic{font-size:1.5rem}
-  .node .t{font-weight:600;font-size:.9rem;margin-top:5px}
-  .node .s{font-size:.74rem;color:var(--muted);margin-top:3px;line-height:1.3}
-  .arrow{display:flex;align-items:center;color:var(--accent);font-size:1.3rem;padding:0 8px}
+        padding:18px 14px;text-align:center;position:relative}
+  .node .ic{font-size:2rem}
+  .node .t{font-weight:700;font-size:.95rem;margin-top:8px;color:var(--accent-hi)}
+  .node .s{font-size:.8rem;color:var(--muted);margin-top:5px;line-height:1.35}
+  .arrow{display:flex;align-items:center;color:var(--accent);font-size:1.5rem;padding:0 10px}
 
   .layer-row{display:flex;align-items:center;gap:16px;background:var(--surface);
              border:1px solid var(--border);border-radius:12px;padding:16px 18px}
@@ -91,9 +85,9 @@
   .layer-row .meta{flex:1}
   .layer-row .meta h3{font-size:1.02rem;margin-bottom:2px}
   .layer-row .meta p{font-size:.85rem;color:var(--muted)}
-  .src{font-size:.74rem;color:var(--accent);letter-spacing:.12em;text-transform:uppercase;text-align:right}
+  .src{font-size:.74rem;color:var(--accent);letter-spacing:.12em;text-transform:uppercase;text-align:right;min-width:90px}
 
-  /* ─────────────────────────────  Title slide  ───────────────────────────── */
+  /* Title */
   .title-wrap{text-align:center}
   .logo{font-size:4.2rem;font-weight:800;letter-spacing:.06em;
         background:linear-gradient(120deg,var(--accent-hi),var(--accent) 55%,#5e6e52);
@@ -102,7 +96,7 @@
   .expand b{color:var(--accent-hi)}
   .tagline{font-size:1.3rem;color:var(--text);margin-top:26px;max-width:40ch;margin-inline:auto;line-height:1.4}
 
-  /* ─────────────────────────────  Footer / nav  ───────────────────────────── */
+  /* Footer */
   .foot{position:absolute;bottom:18px;left:64px;right:64px;display:flex;justify-content:space-between;
         align-items:center;font-size:.72rem;color:var(--muted);letter-spacing:.08em}
   .foot .brand{color:var(--accent)}
@@ -112,11 +106,11 @@
   .dots{position:fixed;bottom:14px;left:50%;transform:translateX(-50%);display:flex;gap:7px;z-index:40}
   .dots i{width:7px;height:7px;border-radius:50%;background:#3a3f37;cursor:pointer;transition:.3s}
   .dots i.on{background:var(--beige);width:20px;border-radius:4px}
-
   .foot .pageno{color:var(--accent-hi);font-weight:700;letter-spacing:.12em;font-variant-numeric:tabular-nums}
-  .small{font-size:.82rem}
+  .small{font-size:.88rem}
+  .kbd{background:#0c0f0c;border:1px solid var(--border);border-bottom-width:2px;border-radius:5px;
+       padding:1px 7px;font-family:ui-monospace,monospace;font-size:.78rem}
 
-  /* ─────────────────────────────  Print / PDF export  ───────────────────────────── */
   @media print{
     @page{ size:1180px 680px; margin:0; }
     html,body{ height:auto; overflow:visible; background:var(--bg) !important; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
@@ -130,16 +124,142 @@
     }
     .slide:last-child{ page-break-after:auto; break-after:auto; }
   }
-  .kbd{background:#0c0f0c;border:1px solid var(--border);border-bottom-width:2px;border-radius:5px;
-       padding:1px 7px;font-family:ui-monospace,monospace;font-size:.78rem}
 </style>
 </head>
 <body>
 <div class="progress" id="prog"></div>
 <div class="deck" id="deck">
 
-  <!-- ───────────────────────  1 · TITLE  ─────────────────────── -->
-  <section class="slide center">
+  <!-- ── COVER ── -->
+  <section class="slide center" data-no-page>
+    <img src="COMIC_secondcover.png" alt="C.O.S.M.I.C"
+         style="width:100%;height:100%;object-fit:contain;position:absolute;inset:0;padding:28px;border-radius:20px;" />
+  </section>
+
+  <!-- ── CONTEXT ── -->
+  <section class="slide">
+    <div class="kicker">Context</div>
+    <h2 style="font-size:1.85rem;margin-bottom:14px">The music–anime crossover is <span class="em">already happening.</span></h2>
+    <div class="fill" style="justify-content:stretch">
+      <div class="grid g2" style="gap:30px;align-items:stretch;flex:1">
+
+        <!-- ── MUSICIANS ── -->
+        <div style="display:flex;flex-direction:column">
+          <div style="font-size:.72rem;letter-spacing:.2em;color:var(--muted);margin-bottom:14px">MUSICIANS</div>
+          <div class="grid g2" style="gap:14px;margin-bottom:14px;flex:1">
+            <div class="card" style="padding:0;overflow:hidden">
+              <div style="background:#15171a;padding:7px 14px;font-size:.66rem;letter-spacing:.16em;color:#cfd2c5">HIP-HOP</div>
+              <div style="padding:12px 14px">
+                <h3 style="font-size:1.05rem;margin-bottom:5px">Kanye West</h3>
+                <p style="color:var(--red);font-size:.82rem;margin-bottom:6px">× Akira (1988)</p>
+                <p style="font-style:italic;font-size:.82rem;color:var(--muted)">"My biggest creative inspiration."</p>
+                <p style="font-size:.7rem;color:#6b7064;margin-top:8px">— The Fader, 2018</p>
+              </div>
+            </div>
+            <div class="card" style="padding:0;overflow:hidden">
+              <div style="background:#1c2730;padding:7px 14px;font-size:.66rem;letter-spacing:.16em;color:#cfd2c5">R&B</div>
+              <div style="padding:12px 14px">
+                <h3 style="font-size:1.05rem;margin-bottom:5px">The Weeknd</h3>
+                <p style="color:var(--red);font-size:.82rem;margin-bottom:6px">× Samurai Champloo</p>
+                <p style="font-style:italic;font-size:.82rem;color:var(--muted)">Anime as a sustained influence.</p>
+                <p style="font-size:.7rem;color:#6b7064;margin-top:8px">— Widely documented</p>
+              </div>
+            </div>
+          </div>
+          <div class="grid g3" style="gap:12px;flex:1">
+            <div class="card" style="padding:12px 13px;border-top:3px solid var(--red)">
+              <div style="font-size:.62rem;letter-spacing:.16em;color:var(--red);margin-bottom:6px">METAL</div>
+              <h3 style="font-size:.95rem;margin-bottom:5px">I Prevail</h3>
+              <p style="color:var(--red);font-size:.76rem;margin-bottom:6px">× Dragon Ball Z</p>
+              <p style="font-style:italic;font-size:.76rem;color:var(--muted)">"Dragon Ball energy in their music."</p>
+            </div>
+            <div class="card" style="padding:12px 13px;border-top:3px solid #8d6fd9">
+              <div style="font-size:.62rem;letter-spacing:.16em;color:#8d6fd9;margin-bottom:6px">RAP</div>
+              <h3 style="font-size:.95rem;margin-bottom:5px">Lil Uzi Vert</h3>
+              <p style="color:var(--red);font-size:.76rem;margin-bottom:6px">× Scott Pilgrim · Naruto</p>
+              <p style="font-style:italic;font-size:.76rem;color:var(--muted)">"Ps & Qs" is fully manga-panel aesthetic.</p>
+            </div>
+            <div class="card" style="padding:12px 13px;border-top:3px solid var(--red)">
+              <div style="font-size:.62rem;letter-spacing:.16em;color:var(--red);margin-bottom:6px">METAL</div>
+              <h3 style="font-size:.95rem;margin-bottom:5px">Beast In Black</h3>
+              <p style="color:var(--red);font-size:.76rem;margin-bottom:6px">× Berserk</p>
+              <p style="font-style:italic;font-size:.76rem;color:var(--muted)">Entire discography drawn from Berserk.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── VISUAL ARTISTS & FILMMAKERS ── -->
+        <div style="display:flex;flex-direction:column">
+          <div style="font-size:.72rem;letter-spacing:.2em;color:var(--muted);margin-bottom:14px">VISUAL ARTISTS &amp; FILMMAKERS</div>
+          <div style="display:flex;flex-direction:column;flex:1;justify-content:space-between;gap:7px">
+            <div class="card" style="padding:17px 16px;border-left:4px solid var(--gold);display:flex;gap:13px;align-items:center">
+              <div style="width:30px;height:30px;border-radius:50%;background:var(--gold);color:#1a1a1a;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.85rem;flex-shrink:0">6</div>
+              <div style="flex:0 0 38%"><h3 style="font-size:1.05rem;margin:0">KAWS</h3><p style="color:var(--red);font-size:.74rem">× Cartoon Pop Art</p></div>
+              <p style="font-size:.84rem;color:var(--muted);flex:1">Simpsons, Looney Tunes aesthetics merged with fine art and brand culture.</p>
+            </div>
+            <div class="card" style="padding:17px 16px;border-left:4px solid var(--red);display:flex;gap:13px;align-items:center">
+              <div style="width:30px;height:30px;border-radius:50%;background:var(--red);color:#1a1a1a;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.85rem;flex-shrink:0">7</div>
+              <div style="flex:0 0 38%"><h3 style="font-size:1.05rem;margin:0">Roy Lichtenstein</h3><p style="color:var(--red);font-size:.74rem">× Comic Strips</p></div>
+              <p style="font-size:.84rem;color:var(--muted);flex:1">Pioneered Ben-Day dots and bold outlines from newspaper comics.</p>
+            </div>
+            <div class="card" style="padding:17px 16px;border-left:4px solid #8d6fd9;display:flex;gap:13px;align-items:center">
+              <div style="width:30px;height:30px;border-radius:50%;background:#8d6fd9;color:#1a1a1a;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.85rem;flex-shrink:0">8</div>
+              <div style="flex:0 0 38%"><h3 style="font-size:1.05rem;margin:0">Takashi Murakami</h3><p style="color:var(--red);font-size:.74rem">× Manga / Anime</p></div>
+              <p style="font-size:.84rem;color:var(--muted);flex:1">Superflat style: manga and anime as fine art and luxury fashion.</p>
+            </div>
+            <div class="card" style="padding:17px 16px;border-left:4px solid var(--accent);display:flex;gap:13px;align-items:center">
+              <div style="width:30px;height:30px;border-radius:50%;background:var(--accent);color:#1a1a1a;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.85rem;flex-shrink:0">9</div>
+              <div style="flex:0 0 38%"><h3 style="font-size:1.05rem;margin:0">Sam Kieth &amp; Gaiman</h3><p style="color:var(--red);font-size:.74rem">× Sandman × Bowie</p></div>
+              <p style="font-size:.84rem;color:var(--muted);flex:1">Lucifer Morningstar's look based on David Bowie. Music shapes comics too.</p>
+            </div>
+            <div class="card" style="padding:17px 16px;border-left:4px solid var(--blue);display:flex;gap:13px;align-items:center">
+              <div style="width:30px;height:30px;border-radius:50%;background:var(--blue);color:#1a1a1a;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.85rem;flex-shrink:0">10</div>
+              <div style="flex:0 0 38%"><h3 style="font-size:1.05rem;margin:0">Bahi JD</h3><p style="color:var(--red);font-size:.74rem">× Anime / Manga</p></div>
+              <p style="font-size:.84rem;color:var(--muted);flex:1">Kinetic animator rooted in manga motion language and storyboarding.</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <div class="foot"><span class="brand">C.O.S.M.I.C</span><span>Context</span></div>
+  </section>
+
+  <!-- ── 3 · PROBLEM ── -->
+  <section class="slide">
+    <div class="kicker">The Problem</div>
+    <h2>Manga powers half of all anime — yet <span class="em">95% of it stays silent forever.</span></h2>
+    <div class="fill">
+      <div class="grid g3" style="margin-bottom:24px">
+        <div class="card center">
+          <div class="big-num">&lt;5%</div>
+          <div class="stat-l">of all manga ever receive an anime adaptation</div>
+        </div>
+        <div class="card center">
+          <div class="big-num">16,000+</div>
+          <div class="stat-l">new manga titles released in a single publishing cycle</div>
+        </div>
+        <div class="card center">
+          <div class="big-num">$42B</div>
+          <div class="stat-l">projected global manga market by 2030 — Yahoo Finance</div>
+        </div>
+      </div>
+      <div class="grid g2">
+        <div class="card">
+          <h3>🎬 52–60% of anime comes from manga</h3>
+          <p>Manga is the backbone of the anime industry. But studios can only adapt a fraction — mega-hits like Jujutsu Kaisen and My Hero Academia absorb all the budgets, leaving thousands of stories with no audio identity.</p>
+        </div>
+        <div class="card">
+          <h3>📚 The gap is only growing</h3>
+          <p>New title releases surged 6.5% to over 16,000 in a single cycle — the largest output expansion since 2008. Audiences are reading faster than studios can adapt. The silence is getting louder.</p>
+        </div>
+      </div>
+    </div>
+    <div class="foot"><span class="brand">C.O.S.M.I.C</span><span>The Problem</span></div>
+  </section>
+
+  <!-- ── 1 · TITLE ── -->
+  <section class="slide center" data-no-page>
     <div class="title-wrap">
       <div class="logo">C.O.S.M.I.C</div>
       <div class="expand"><b>CO</b>mic &nbsp;<b>S</b>oundtrack &nbsp;<b>M</b>us<b>I</b>c &nbsp;<b>C</b>omposer</div>
@@ -169,252 +289,218 @@
         </div>
       </div>
     </div>
-    <div class="foot"><span class="brand">C.O.S.M.I.C</span><span>Hackathon Pitch</span></div>
+    <div class="foot"><span class="brand"></span><span></span></div>
   </section>
 
-  <!-- ───────────────────────  2 · CONTEXT (from comic-melody-v3)  ─────────────────────── -->
-  <section class="slide">
-    <div class="kicker">Context</div>
-    <h2 style="font-size:1.85rem;margin-bottom:14px">The music–comics crossover is <span class="em">already happening.</span></h2>
-    <div class="fill" style="justify-content:stretch">
-      <div class="grid g2" style="gap:30px;align-items:stretch;flex:1">
-
-        <!-- ── MUSICIANS ───────────────────────────────────────────── -->
-        <div style="display:flex;flex-direction:column">
-          <div style="font-size:.72rem;letter-spacing:.2em;color:var(--muted);margin-bottom:14px">MUSICIANS</div>
-          <div class="grid g2" style="gap:14px;margin-bottom:14px;flex:1">
-            <!-- Kanye West -->
-            <div class="card" style="padding:0;overflow:hidden">
-              <div style="background:#15171a;padding:7px 14px;font-size:.66rem;letter-spacing:.16em;color:#cfd2c5">HIP-HOP</div>
-              <div style="padding:12px 14px">
-                <h3 style="font-size:1.05rem;margin-bottom:5px">Kanye West</h3>
-                <p style="color:var(--red);font-size:.82rem;margin-bottom:6px">× Akira (1988)</p>
-                <p style="font-style:italic;font-size:.82rem;color:var(--muted)">"My biggest creative inspiration."</p>
-                <p style="font-size:.7rem;color:#6b7064;margin-top:8px">— The Fader, 2018</p>
-              </div>
-            </div>
-            <!-- The Weeknd -->
-            <div class="card" style="padding:0;overflow:hidden">
-              <div style="background:#1c2730;padding:7px 14px;font-size:.66rem;letter-spacing:.16em;color:#cfd2c5">R&B</div>
-              <div style="padding:12px 14px">
-                <h3 style="font-size:1.05rem;margin-bottom:5px">The Weeknd</h3>
-                <p style="color:var(--red);font-size:.82rem;margin-bottom:6px">× Samurai Champloo</p>
-                <p style="font-style:italic;font-size:.82rem;color:var(--muted)">Anime as a sustained influence.</p>
-                <p style="font-size:.7rem;color:#6b7064;margin-top:8px">— Widely documented</p>
-              </div>
-            </div>
-          </div>
-          <div class="grid g3" style="gap:12px;flex:1">
-            <!-- I Prevail -->
-            <div class="card" style="padding:12px 13px;border-top:3px solid var(--red)">
-              <div style="font-size:.62rem;letter-spacing:.16em;color:var(--red);margin-bottom:6px">METAL</div>
-              <h3 style="font-size:.95rem;margin-bottom:5px">I Prevail</h3>
-              <p style="color:var(--red);font-size:.76rem;margin-bottom:6px">× Dragon Ball Z</p>
-              <p style="font-style:italic;font-size:.76rem;color:var(--muted)">"Dragon Ball energy in their music."</p>
-            </div>
-            <!-- Lil Uzi Vert -->
-            <div class="card" style="padding:12px 13px;border-top:3px solid #8d6fd9">
-              <div style="font-size:.62rem;letter-spacing:.16em;color:#8d6fd9;margin-bottom:6px">RAP</div>
-              <h3 style="font-size:.95rem;margin-bottom:5px">Lil Uzi Vert</h3>
-              <p style="color:var(--red);font-size:.76rem;margin-bottom:6px">× Scott Pilgrim · Naruto</p>
-              <p style="font-style:italic;font-size:.76rem;color:var(--muted)">"Ps & Qs" is fully manga-panel aesthetic.</p>
-            </div>
-            <!-- Beast In Black -->
-            <div class="card" style="padding:12px 13px;border-top:3px solid var(--red)">
-              <div style="font-size:.62rem;letter-spacing:.16em;color:var(--red);margin-bottom:6px">METAL</div>
-              <h3 style="font-size:.95rem;margin-bottom:5px">Beast In Black</h3>
-              <p style="color:var(--red);font-size:.76rem;margin-bottom:6px">× Berserk</p>
-              <p style="font-style:italic;font-size:.76rem;color:var(--muted)">Entire discography drawn from Berserk.</p>
-            </div>
-          </div>
-        </div>
-
-        <!-- ── VISUAL ARTISTS & FILMMAKERS ─────────────────────────── -->
-        <div style="display:flex;flex-direction:column">
-          <div style="font-size:.72rem;letter-spacing:.2em;color:var(--muted);margin-bottom:14px">VISUAL ARTISTS &amp; FILMMAKERS</div>
-          <div style="display:flex;flex-direction:column;flex:1;justify-content:space-between;gap:7px">
-            <!-- 6 KAWS -->
-            <div class="card" style="padding:17px 16px;border-left:4px solid var(--gold);display:flex;gap:13px;align-items:center">
-              <div style="width:30px;height:30px;border-radius:50%;background:var(--gold);color:#1a1a1a;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.85rem;flex-shrink:0">6</div>
-              <div style="flex:0 0 38%">
-                <h3 style="font-size:1.05rem;margin:0">KAWS</h3>
-                <p style="color:var(--red);font-size:.74rem">× Cartoon Pop Art</p>
-              </div>
-              <p style="font-size:.84rem;color:var(--muted);flex:1">Simpsons, Looney Tunes aesthetics merged with fine art and brand culture.</p>
-            </div>
-            <!-- 7 Roy Lichtenstein -->
-            <div class="card" style="padding:17px 16px;border-left:4px solid var(--red);display:flex;gap:13px;align-items:center">
-              <div style="width:30px;height:30px;border-radius:50%;background:var(--red);color:#1a1a1a;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.85rem;flex-shrink:0">7</div>
-              <div style="flex:0 0 38%">
-                <h3 style="font-size:1.05rem;margin:0">Roy Lichtenstein</h3>
-                <p style="color:var(--red);font-size:.74rem">× Comic Strips</p>
-              </div>
-              <p style="font-size:.84rem;color:var(--muted);flex:1">Pioneered Ben-Day dots and bold outlines from newspaper comics.</p>
-            </div>
-            <!-- 8 Takashi Murakami -->
-            <div class="card" style="padding:17px 16px;border-left:4px solid #8d6fd9;display:flex;gap:13px;align-items:center">
-              <div style="width:30px;height:30px;border-radius:50%;background:#8d6fd9;color:#1a1a1a;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.85rem;flex-shrink:0">8</div>
-              <div style="flex:0 0 38%">
-                <h3 style="font-size:1.05rem;margin:0">Takashi Murakami</h3>
-                <p style="color:var(--red);font-size:.74rem">× Manga / Anime</p>
-              </div>
-              <p style="font-size:.84rem;color:var(--muted);flex:1">Superflat style: manga and anime as fine art and luxury fashion.</p>
-            </div>
-            <!-- 9 Sam Kieth & Gaiman -->
-            <div class="card" style="padding:17px 16px;border-left:4px solid var(--accent);display:flex;gap:13px;align-items:center">
-              <div style="width:30px;height:30px;border-radius:50%;background:var(--accent);color:#1a1a1a;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.85rem;flex-shrink:0">9</div>
-              <div style="flex:0 0 38%">
-                <h3 style="font-size:1.05rem;margin:0">Sam Kieth &amp; Gaiman</h3>
-                <p style="color:var(--red);font-size:.74rem">× Sandman × Bowie</p>
-              </div>
-              <p style="font-size:.84rem;color:var(--muted);flex:1">Lucifer Morningstar's look based on David Bowie. Music shapes comics too.</p>
-            </div>
-            <!-- 10 Bahi JD -->
-            <div class="card" style="padding:17px 16px;border-left:4px solid var(--blue);display:flex;gap:13px;align-items:center">
-              <div style="width:30px;height:30px;border-radius:50%;background:var(--blue);color:#1a1a1a;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.85rem;flex-shrink:0">10</div>
-              <div style="flex:0 0 38%">
-                <h3 style="font-size:1.05rem;margin:0">Bahi JD</h3>
-                <p style="color:var(--red);font-size:.74rem">× Anime / Manga</p>
-              </div>
-              <p style="font-size:.84rem;color:var(--muted);flex:1">Kinetic animator rooted in manga motion language and storyboarding.</p>
-            </div>
-          </div>
-        </div>
-
-      </div>
-    </div>
-    <div class="foot"><span class="brand">C.O.S.M.I.C</span><span>Context</span></div>
-  </section>
-
-  <!-- ───────────────────────  3 · SOLUTION  ─────────────────────── -->
+  <!-- ── SOLUTION ── -->
   <section class="slide">
     <div class="kicker">The Solution</div>
     <h2>A soundtrack for <span class="em">every panel</span>, generated automatically</h2>
     <p class="lead" style="margin-bottom:22px">Drop in a comic page. C.O.S.M.I.C detects the panels, understands each one, and
-      composes a custom three-layer soundtrack — then plays the page back panel-by-panel, like a motion comic.</p>
+      composes a custom three-layer soundtrack — then plays the page back panel by panel, like a motion comic.</p>
     <div class="fill" style="gap:14px;display:flex;flex-direction:column;justify-content:center">
       <div class="layer-row">
-        <div class="layer-ic" style="background:#16312a;color:var(--accent)">🌊</div>
-        <div class="meta"><h3>Background — the ambience bed</h3><p>A 30-second atmospheric track from the scene's music prompt.</p></div>
-        <div class="src">Stable Audio 3<br/>Small · Modal T4</div>
+        <div class="layer-ic" style="background:#16312a;font-size:1.6rem">🌊</div>
+        <div class="meta">
+          <h3>Background — sets the scene</h3>
+          <p>Atmospheric music that matches the mood of each panel. Calm forests, tense battles, quiet moments — each gets its own soundscape.</p>
+        </div>
+        <div class="src">Stable Audio 3</div>
       </div>
       <div class="layer-row">
-        <div class="layer-ic" style="background:#332b14;color:var(--gold)">🎹</div>
-        <div class="meta"><h3>Melody — the mood motif</h3><p>A curated MIDI motif per mood, rendered live by Google's real-time music model.</p></div>
-        <div class="src">Magenta RT2<br/>Modal T4 GPU</div>
+        <div class="layer-ic" style="background:#332b14;font-size:1.6rem">🎹</div>
+        <div class="meta">
+          <h3>Melody — the emotional hook</h3>
+          <p>A short musical phrase that captures the panel's emotion — tense, triumphant, mysterious, sad. Changes with every panel.</p>
+        </div>
+        <div class="src">Magenta RT2</div>
       </div>
       <div class="layer-row">
-        <div class="layer-ic" style="background:#33321a;color:var(--beige)">🗣️</div>
-        <div class="meta"><h3>Voice — the dialogue</h3><p>Spoken speech-bubble lines in a character-matched voice, transcoded to MP3 for the browser.</p></div>
-        <div class="src">Suno API</div>
+        <div class="layer-ic" style="background:#33321a;font-size:1.6rem">🗣️</div>
+        <div class="meta">
+          <h3>Voice — the dialogue</h3>
+          <p>Every speech bubble is read aloud in the right voice, in the right reading order. The panel stays on screen until the character finishes speaking.</p>
+        </div>
+        <div class="src">Suno</div>
       </div>
     </div>
     <div class="foot"><span class="brand">C.O.S.M.I.C</span><span>The Solution</span></div>
   </section>
 
-  <!-- ───────────────────────  7 · SCENE UNDERSTANDING  ─────────────────────── -->
+  <!-- ── 4 · HOW IT WORKS ── -->
   <section class="slide">
-    <div class="kicker">Component · 2</div>
-    <h2>One look → a complete audio brief</h2>
-    <p class="lead" style="margin-bottom:20px">Each cropped panel goes to Claude vision once and comes back as a structured brief that drives all three audio models.</p>
-    <div class="fill">
-      <div class="grid g4">
-        <div class="card"><h3>🌊 Music prompt</h3><p>A rich background-track description — genre, instrumentation, mood — for Stable Audio.</p></div>
-        <div class="card"><h3>🎭 Mood</h3><p>One of 7 moods — <span class="accent">calm · tense · action · sad · mysterious · triumphant · neutral</span> — picks the melody.</p></div>
-        <div class="card"><h3>💬 Dialogue</h3><p>Speech-bubble text transcribed verbatim, in reading order, original language preserved.</p></div>
-        <div class="card"><h3>🗣️ Voice</h3><p>Chooses a male or female voice that matches the panel's dominant speaker.</p></div>
+    <div class="kicker">How It Works</div>
+    <h2>Four steps, <span class="em">fully automatic</span></h2>
+    <div class="fill" style="justify-content:center;gap:28px">
+      <div class="flow" style="gap:0">
+        <div class="node">
+          <div class="ic">📄</div>
+          <div class="t">Upload</div>
+          <div class="s">Drop in any manga or comic PDF and pick a page</div>
+        </div>
+        <div class="arrow">→</div>
+        <div class="node">
+          <div class="ic">🔲</div>
+          <div class="t">Detect</div>
+          <div class="s">Each panel is automatically found and cropped out</div>
+        </div>
+        <div class="arrow">→</div>
+        <div class="node">
+          <div class="ic">🧠</div>
+          <div class="t">Understand</div>
+          <div class="s">AI reads every panel — mood, dialogue, key, tempo</div>
+        </div>
+        <div class="arrow">→</div>
+        <div class="node">
+          <div class="ic">🎵</div>
+          <div class="t">Compose</div>
+          <div class="s">Three audio tracks generated simultaneously per panel</div>
+        </div>
+        <div class="arrow">→</div>
+        <div class="node">
+          <div class="ic">▶️</div>
+          <div class="t">Play</div>
+          <div class="s">Panels reveal one by one, music and voice in sync</div>
+        </div>
       </div>
-      <div class="card" style="margin-top:18px">
-        <p class="small"><b>Structured output, not guesswork.</b> Claude returns a typed schema (Pydantic-validated), so every field is safe to feed straight into the generation step — no fragile parsing.</p>
+      <div class="card" style="background:transparent;border-color:var(--border)">
+        <p class="small" style="color:var(--muted);text-align:center">
+          The first panel plays within seconds of uploading — the rest generate quietly in the background while you're already reading.
+        </p>
       </div>
     </div>
-    <div class="foot"><span class="brand">C.O.S.M.I.C</span><span>Scene Understanding</span></div>
+    <div class="foot"><span class="brand">C.O.S.M.I.C</span><span>How It Works</span></div>
   </section>
 
-  <!-- ───────────────────────  10 · INFRA / PERFORMANCE  ─────────────────────── -->
+  <!--
+  SLIDE COMMENTED OUT: The Intelligence
   <section class="slide">
-    <div class="kicker">Engineering</div>
-    <h2>Built to feel <span class="em">instant</span></h2>
+    <div class="kicker">The Intelligence</div>
+    <h2>One glance at a panel -&gt; a complete audio brief</h2>
+    <p class="lead" style="margin-bottom:20px">An AI vision model looks at each panel once and extracts everything needed to score it — no manual tagging, no metadata.</p>
     <div class="fill">
-      <div class="grid g3" style="margin-bottom:18px">
-        <div class="card center"><div class="big-num">3</div><div class="stat-l">GPU + API models orchestrated in parallel</div></div>
-        <div class="card center"><div class="big-num">~2–3s</div><div class="stat-l">warm-container render per loop on Modal T4</div></div>
-        <div class="card center"><div class="big-num">1st</div><div class="stat-l">panel unlocks the reader — rest stream in</div></div>
+      <div class="grid g4" style="margin-bottom:16px">
+        <div class="card">
+          <h3>Music prompt</h3>
+          <p>Describes the scene's atmosphere — genre, instruments, energy level — used to generate the background track.</p>
+        </div>
+        <div class="card">
+          <h3>Mood</h3>
+          <p>One of 7 emotions — calm, tense, action, sad, mysterious, triumphant, neutral — picks the melody.</p>
+        </div>
+        <div class="card">
+          <h3>Dialogue</h3>
+          <p>Every speech bubble transcribed in the correct reading order — left-to-right for western comics, right-to-left for manga.</p>
+        </div>
+        <div class="card">
+          <h3>Voice</h3>
+          <p>Chooses a voice that matches the panel's dominant speaker — male or female — for the most natural read-aloud.</p>
+        </div>
       </div>
-      <div class="grid g2">
-        <div class="card"><h3>☁️ Serverless GPU on Modal</h3><p>Heavy JAX/PyTorch inference runs on cloud T4s, kept <b>warm</b> (5-min window, weights on a persistent volume) — no cold-start tax, no local GPU needed.</p></div>
-        <div class="card"><h3>⚡ Overlap everything</h3><p>Style embeddings cached at startup; analysis, GPU jobs and voice run concurrently per panel; progress streams live over WebSocket so the UI is never frozen.</p></div>
+      <div class="card" style="border-left:3px solid var(--accent)">
+        <p class="small">Also detects the musical key and tempo that fit the panel's emotional tone.</p>
       </div>
     </div>
-    <div class="foot"><span class="brand">C.O.S.M.I.C</span><span>Performance</span></div>
+    <div class="foot">C.O.S.M.I.C - The Intelligence</div>
   </section>
+  -->
 
-  <!-- ───────────────────────  11 · TECH STACK  ─────────────────────── -->
-  <section class="slide">
-    <div class="kicker">Under the hood</div>
-    <h2>Tech stack</h2>
-    <div class="fill">
-      <div class="grid g4">
-        <div class="card"><span class="tag">AI · Vision</span><h3>🧠 Claude</h3><p>Sonnet 4.6 for panel layout, Haiku 4.5 for fast per-panel scene analysis.</p></div>
-        <div class="card"><span class="tag">AI · Music</span><h3>🎹 Magenta RT2</h3><p>Google DeepMind's real-time music model (JAX), note-conditioned.</p></div>
-        <div class="card"><span class="tag">AI · Ambience</span><h3>🌊 Stable Audio 3</h3><p>Stability's text-to-audio diffusion model for background beds.</p></div>
-        <div class="card"><span class="tag">AI · Voice</span><h3>🗣️ Suno</h3><p>Voice generation API with selectable character presets.</p></div>
-        <div class="card"><span class="tag">Compute</span><h3>☁️ Modal</h3><p>Serverless T4 GPUs, persistent volumes, warm containers.</p></div>
-        <div class="card"><span class="tag">Backend</span><h3>🐍 Python</h3><p><code>aiohttp</code> async server · HTTP + WebSocket · PyMuPDF.</p></div>
-        <div class="card"><span class="tag">CV</span><h3>🔲 kumiko</h3><p>Classical panel detection · OpenCV.</p></div>
-        <div class="card"><span class="tag">Frontend</span><h3>🌐 Web reader</h3><p>Single-page HTML/JS reader · live WebSocket streaming.</p></div>
-      </div>
-    </div>
-    <div class="foot"><span class="brand">C.O.S.M.I.C</span><span>Tech Stack</span></div>
-  </section>
-
-  <!-- ───────────────────────  12 · HARD PROBLEMS SOLVED  ─────────────────────── -->
+  <!--
+  SLIDE COMMENTED OUT: Problems we actually solved
   <section class="slide">
     <div class="kicker">Why it's hard</div>
     <h2>Problems we actually solved</h2>
     <div class="fill">
       <div class="grid g2">
-        <div class="card"><h3>🧭 Reading order</h3><p>Manga's right-to-left flow breaks naïve OCR. We infer direction per page so dialogue is voiced in the right sequence.</p></div>
-        <div class="card"><h3>🔲 Borderless panels</h3><p>Splash & dark pages have no gutters for CV. The Claude grid fallback recovers panels by narrative grouping.</p></div>
-        <div class="card"><h3>🗣️ Voice ≠ music</h3><p>Early dialogue came out <i>sung</i>. A dedicated "spoken-word, dry vocal" style + preset voices yields clear speech.</p></div>
-        <div class="card"><h3>⏳ Latency</h3><p>Three models would mean a long wait. Warm GPUs + progressive unlock make the first panel feel immediate.</p></div>
+        <div class="card">
+          <h3>Reading order</h3>
+          <p>Manga reads right-to-left — the opposite of western comics. We automatically detect the direction per page so dialogue is always voiced in the right sequence.</p>
+        </div>
+        <div class="card">
+          <h3>Panels without borders</h3>
+          <p>Full-page art and dark backgrounds have no visible gutters. When standard detection fails, AI takes over and identifies panels by story grouping instead.</p>
+        </div>
+        <div class="card">
+          <h3>Voice that actually sounds spoken</h3>
+          <p>Early versions came back sung instead of spoken. A dedicated "dry vocal, spoken word" style instruction fixed it.</p>
+        </div>
+        <div class="card">
+          <h3>Making it feel fast</h3>
+          <p>Coordinating three AI models could mean a long wait. By running everything at once and unlocking the reader as soon as the first panel is ready, it feels immediate.</p>
+        </div>
       </div>
     </div>
-    <div class="foot"><span class="brand">C.O.S.M.I.C</span><span>Challenges</span></div>
+    <div class="foot">C.O.S.M.I.C - Challenges</div>
   </section>
+  -->
 
-  <!-- ───────────────────────  13 · ROADMAP  ─────────────────────── -->
+  <!-- ── 9 · ROADMAP ── -->
   <section class="slide">
     <div class="kicker">What's next</div>
     <h2>Roadmap</h2>
     <div class="fill">
       <div class="grid g3">
         <div class="card"><span class="tag">Near term</span>
-          <h3>📚 Full chapters</h3><p>Scale from one page to whole episodes with cross-panel music continuity and crossfades.</p></div>
+          <h3>📚 Full chapters</h3>
+          <p>Scale from one page to whole episodes, with music that flows continuously across panels and crossfades between scenes.</p>
+        </div>
         <div class="card"><span class="tag">Near term</span>
-          <h3>🔊 Sound effects</h3><p>Turn onomatopoeia (BOOM, SLASH) into Stable-Audio SFX cues layered on the panel.</p></div>
+          <h3>🔊 Sound effects</h3>
+          <p>Turn onomatopoeia — BOOM, SLASH, CRASH — into real audio effects layered on top of the scene.</p>
+        </div>
         <div class="card"><span class="tag">Polish</span>
-          <h3>🎭 Per-character voices</h3><p>Consistent distinct voices across a story, auto-assigned per speaker.</p></div>
+          <h3>🎭 Per-character voices</h3>
+          <p>Each character gets a consistent, distinct voice across the whole story — automatically assigned and remembered.</p>
+        </div>
         <div class="card"><span class="tag">Reach</span>
-          <h3>📖 Beyond comics</h3><p>Generalize the engine to illustrated novels and plain books with auto-narration.</p></div>
+          <h3>📖 Beyond comics</h3>
+          <p>Apply the same engine to illustrated novels and children's books — any visual storytelling format.</p>
+        </div>
         <div class="card"><span class="tag">Reach</span>
-          <h3>🎚️ DAW handoff</h3><p>Export motifs + stems to Ableton for human producers to arrange.</p></div>
+          <h3>🎚️ Producer handoff</h3>
+          <p>Export the generated music as stems and MIDI files so human producers can refine and arrange the soundtrack.</p>
+        </div>
         <div class="card"><span class="tag">Ship</span>
-          <h3>🌍 Hosted app</h3><p>One-click web deploy so anyone can drop in a page and listen.</p></div>
+          <h3>🌍 One-click web app</h3>
+          <p>A hosted app where anyone can drop in a page and have their comic scored — no setup, no downloads.</p>
+        </div>
       </div>
     </div>
     <div class="foot"><span class="brand">C.O.S.M.I.C</span><span>Roadmap</span></div>
   </section>
 
-  <!-- ───────────────────────  14 · CLOSING  ─────────────────────── -->
+  <!-- ── 10 · LET'S HEAR IT ── -->
   <section class="slide center">
     <div class="title-wrap">
-      <img src="COMIC_secondcover.png" alt="C.O.S.M.I.C"
-           style="max-width:min(640px,82%);max-height:58vh;object-fit:contain;border-radius:16px;
-                  border:1px solid var(--border);box-shadow:0 18px 60px rgba(0,0,0,.55)" />
-      <p class="tagline" style="margin-top:30px;font-size:1.9rem">Let's <span class="accent">hear it</span>. 🎧</p>
+      <div class="logo" style="font-size:3rem;margin-bottom:18px">C.O.S.M.I.C</div>
+      <p style="font-size:3.2rem;font-weight:700;color:var(--text);line-height:1.1;margin-bottom:16px">
+        Let's <span class="accent">hear it</span>. 🎧
+      </p>
+      <p style="font-size:1.1rem;color:var(--muted);max-width:38ch;margin-inline:auto;line-height:1.5">
+        Drop in a page. Press play.<br/>Your comic has a soundtrack now.
+      </p>
     </div>
     <div class="foot"><span class="brand">C.O.S.M.I.C</span><span>Thank You</span></div>
+  </section>
+
+  <!-- ── CONNECT / QR ── -->
+  <section class="slide center">
+    <div class="title-wrap">
+      <div class="kicker" style="margin-bottom:22px">Connect</div>
+      <p style="font-size:1.7rem;font-weight:700;color:var(--text);margin-bottom:30px">Let's stay in touch</p>
+      <div style="display:inline-block;padding:14px;background:#ffffff;border-radius:18px;box-shadow:0 8px 36px rgba(0,0,0,.55)">
+        <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://www.linkedin.com/in/dhananjaya-kumar-venkata-mittapalli/"
+             alt="LinkedIn QR Code" style="width:200px;height:200px;display:block;border-radius:6px" />
+      </div>
+      <div style="margin-top:22px;display:flex;align-items:center;justify-content:center;gap:10px">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="var(--blue)" xmlns="http://www.w3.org/2000/svg">
+          <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+        </svg>
+        <span style="font-size:.92rem;color:var(--muted)">linkedin.com/in/dhananjaya-kumar-venkata-mittapalli</span>
+      </div>
+      <div style="margin-top:10px;font-size:.88rem;color:var(--accent-hi);font-weight:600">Dhananjay Kumar Venkata Mittapalli</div>
+    </div>
+    <div class="foot"><span class="brand">C.O.S.M.I.C</span><span>Connect</span></div>
   </section>
 
 </div>
@@ -429,8 +515,8 @@
   let i=0;
   const total=slides.length;
   const pad=n=>String(n).padStart(2,'0');
-  // Stamp each slide's footer with its page number (e.g. "03 / 14")
   slides.forEach((s,n)=>{
+    if(s.hasAttribute('data-no-page')) return;
     const foot=s.querySelector('.foot');
     if(foot){
       const pg=document.createElement('span');
