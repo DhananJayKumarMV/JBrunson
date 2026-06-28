@@ -27,6 +27,7 @@ from __future__ import annotations
 
 import asyncio
 import base64
+import concurrent.futures
 import io
 import uuid
 import json
@@ -50,20 +51,28 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 sys.path.insert(0, str(Path(__file__).resolve().parent / "kumiko"))  # kumiko + its lib/ subpackage
 from midi_library import melody_for_mood, transpose_segments, scale_tempo_segments, KEY_SEMITONES  # noqa: E402
 
-# Load .env so API keys are available regardless of how the script was launched
-_ENV_FILE = Path(__file__).parent.parent / "webgenta" / ".env"
-if _ENV_FILE.exists():
-    for _line in _ENV_FILE.read_text().splitlines():
-        _line = _line.strip()
-        if _line and not _line.startswith("#") and "=" in _line:
-            _k, _, _v = _line.partition("=")
-            os.environ.setdefault(_k.strip(), _v.strip())
+# Load .env — walk up from repo root looking for the file
+def _load_env():
+    candidates = [
+        Path(__file__).parent.parent / "webgenta" / ".env",  # JBrunson/webgenta/.env
+        Path(__file__).parent.parent / ".env",               # JBrunson/.env
+        Path(__file__).parent.parent.parent / ".env",        # MusicHackathon/.env
+    ]
+    for _env in candidates:
+        if _env.exists():
+            for _line in _env.read_text().splitlines():
+                _line = _line.strip()
+                if _line and not _line.startswith("#") and "=" in _line:
+                    _k, _, _v = _line.partition("=")
+                    os.environ.setdefault(_k.strip(), _v.strip().strip('"').strip("'"))
+            break
+_load_env()
 
 PORT = 8766
 COMIC_HTML = Path(__file__).parent.parent / "webgenta" / "web" / "comic.html"
 MAGENTA_SAMPLE_RATE = 48000
 MAGENTA_CHANNELS = 2
-STABLE_AUDIO_DURATION = 30
+STABLE_AUDIO_DURATION = 10
 SUNO_BASE = "https://api.suno.com"
 SUNO_POLL_INTERVAL = 3.0
 SUNO_POLL_TIMEOUT = 180.0
@@ -76,7 +85,7 @@ VOICE_FEMALE  = "5b915c6d-8d96-416c-9755-eba65868cfef"  # female voice
 VOICE_MALE    = "27f5465b-73c3-4134-b11e-70b0bd571c6c"  # low male voice
 VOICE_DEFAULT = VOICE_FEMALE
 _VALID_VOICE_IDS = {VOICE_FEMALE, VOICE_MALE}
-VISION_MODEL = "claude-haiku-4-5"
+VISION_MODEL = "claude-sonnet-4-6"
 PANEL_VISION_MODEL = "claude-sonnet-4-6"  # higher-capability model for panel boundary detection
 FIRST_BATCH = 3  # pages needed before reader unlocks; rest generate in background
 VISION_SYSTEM = (
@@ -227,9 +236,21 @@ def _crop_png(page_png: bytes, box: list[float]) -> bytes:
     src.close()
     return out
 
-# ── Modal handles (set at startup if available) ───────────────────────────────
-_stable_cls = None
-_magenta_cls = None
+# ── Local inference modules (imported lazily at startup) ─────────────────────
+import local_musicgen as _stable_cls  # type: ignore[assignment]
+import local_magenta  as _magenta_cls  # type: ignore[assignment]
+
+# MLX Metal GPU streams are thread-local — all Magenta calls must run on the
+# same thread that first loaded the model.  max_workers=1 guarantees that.
+_magenta_executor = concurrent.futures.ThreadPoolExecutor(
+    max_workers=1, thread_name_prefix="magenta"
+)
+
+# MusicGen (PyTorch MPS) also crashes when multiple threads race to load or
+# run the model simultaneously.  Serialise all generation calls to one thread.
+_musicgen_executor = concurrent.futures.ThreadPoolExecutor(
+    max_workers=1, thread_name_prefix="musicgen"
+)
 
 # ── Global state (reset on each /upload) ─────────────────────────────────────
 _state: dict = {
@@ -308,55 +329,48 @@ async def _broadcast(msg: dict) -> None:
 # ── Audio generation tasks ────────────────────────────────────────────────────
 
 async def _gen_stable(pdf_n: int) -> None:
-    if _stable_cls is None:
+    prompt = _state["page_data"][pdf_n].get("stable_audio_prompt", "ambient music")
+    key   = _state["page_data"][pdf_n].get("music_key", "C")
+    scale = _state["page_data"][pdf_n].get("music_scale", "major")
+    bpm   = _state["page_data"][pdf_n].get("tempo_bpm", 90)
+    prompt = f"{prompt}, key of {key} {scale}, {bpm} BPM"
+    print(f"[p{pdf_n}] musicgen: {prompt[:80]!r}…", flush=True)
+    try:
+        loop = asyncio.get_running_loop()
+        wav = await loop.run_in_executor(_musicgen_executor, _stable_cls.generate, prompt, STABLE_AUDIO_DURATION)
+        _state["stable_wavs"][pdf_n] = wav
+        print(f"[p{pdf_n}] musicgen done ({len(wav)//1024} KB)", flush=True)
+    except Exception as e:
+        print(f"[p{pdf_n}] musicgen ERROR: {e}", flush=True)
         _state["stable_wavs"][pdf_n] = b""
-    else:
-        prompt = _state["page_data"][pdf_n].get("stable_audio_prompt", "ambient music")
-        key   = _state["page_data"][pdf_n].get("music_key", "C")
-        scale = _state["page_data"][pdf_n].get("music_scale", "major")
-        bpm   = _state["page_data"][pdf_n].get("tempo_bpm", 90)
-        prompt = f"{prompt}, key of {key} {scale}, {bpm} BPM"
-        print(f"[p{pdf_n}] stable: {prompt[:80]!r}…", flush=True)
-        try:
-            wav = await _stable_cls.generate.remote.aio(prompt, STABLE_AUDIO_DURATION)
-            _state["stable_wavs"][pdf_n] = wav
-            print(f"[p{pdf_n}] stable done ({len(wav)//1024} KB)", flush=True)
-        except Exception as e:
-            print(f"[p{pdf_n}] stable ERROR: {e}", flush=True)
-            _state["stable_wavs"][pdf_n] = b""
     _state["progress"][pdf_n]["stable"] = True
     await _broadcast({"type": "progress", "pdf_page": pdf_n, "track": "stable", "done": True})
 
 
 async def _gen_magenta(pdf_n: int) -> None:
-    if _magenta_cls is None:
+    mood  = _state["page_data"][pdf_n].get("magenta_mood", "neutral")
+    key   = _state["page_data"][pdf_n].get("music_key", "C")
+    scale = _state["page_data"][pdf_n].get("music_scale", "major")
+    bpm   = _state["page_data"][pdf_n].get("tempo_bpm", 90)
+    style = _state["page_data"][pdf_n].get("stable_audio_prompt", "ambient music")
+    style = f"{style}, key of {key} {scale}, {bpm} BPM"
+    print(f"[p{pdf_n}] magenta: mood={mood!r} key={key} scale={scale} bpm={bpm}", flush=True)
+    session_id = f"panel_{pdf_n}_{uuid.uuid4().hex[:8]}"
+    try:
+        notes_segs = melody_for_mood(mood)
+        semitones  = KEY_SEMITONES.get(key, 0)
+        notes_segs = transpose_segments(notes_segs, semitones)
+        notes_segs = scale_tempo_segments(notes_segs, bpm)
+        loop = asyncio.get_running_loop()
+        await loop.run_in_executor(_magenta_executor, _magenta_cls.begin_session, session_id, style)
+        wav = await loop.run_in_executor(
+            _magenta_executor, _magenta_cls.render_melody, session_id, notes_segs
+        )
+        _state["magenta_wavs"][pdf_n] = wav
+        print(f"[p{pdf_n}] magenta done ({len(wav)//1024} KB)", flush=True)
+    except Exception as e:
+        print(f"[p{pdf_n}] magenta ERROR: {e}", flush=True)
         _state["magenta_wavs"][pdf_n] = b""
-    else:
-        mood  = _state["page_data"][pdf_n].get("magenta_mood", "neutral")
-        key   = _state["page_data"][pdf_n].get("music_key", "C")
-        scale = _state["page_data"][pdf_n].get("music_scale", "major")
-        bpm   = _state["page_data"][pdf_n].get("tempo_bpm", 90)
-        style = _state["page_data"][pdf_n].get("stable_audio_prompt", "ambient music")
-        style = f"{style}, key of {key} {scale}, {bpm} BPM"
-        print(f"[p{pdf_n}] magenta: mood={mood!r} key={key} scale={scale} bpm={bpm}", flush=True)
-        session_id = f"panel_{pdf_n}_{uuid.uuid4().hex[:8]}"
-        try:
-            notes_segs = melody_for_mood(mood)
-            semitones  = KEY_SEMITONES.get(key, 0)
-            notes_segs = transpose_segments(notes_segs, semitones)
-            notes_segs = scale_tempo_segments(notes_segs, bpm)
-            await _magenta_cls.begin_session.remote.aio(session_id, style)
-            pcm = await _magenta_cls.render_melody.remote.aio(session_id, notes_segs)
-            _state["magenta_wavs"][pdf_n] = _pcm32_to_wav(pcm)
-            print(f"[p{pdf_n}] magenta done ({len(_state['magenta_wavs'][pdf_n])//1024} KB)", flush=True)
-        except Exception as e:
-            print(f"[p{pdf_n}] magenta ERROR: {e}", flush=True)
-            _state["magenta_wavs"][pdf_n] = b""
-        finally:
-            try:
-                await _magenta_cls.end_session.remote.aio(session_id)
-            except Exception:
-                pass
     _state["progress"][pdf_n]["magenta"] = True
     await _broadcast({"type": "progress", "pdf_page": pdf_n, "track": "magenta", "done": True})
 
@@ -436,9 +450,17 @@ async def _gen_suno(pdf_n: int) -> None:
 
 
 async def _wait_for_page(pdf_n: int) -> None:
-    # Wait only for stable audio — melody/voice served if available, skipped if not.
-    # This avoids blocking on the cold-start container or slow magenta/suno runs.
-    while pdf_n not in _state["stable_wavs"]:
+    # Wait until every *enabled* track has finished (key present in its wav dict).
+    # Disabled tracks are set to b"" immediately, so they count as done right away.
+    # Without this fix, if stable is disabled the function returns before suno
+    # finishes, so voice is never included in the tracks_end bundle.
+    enabled = _state.get("enabled_tracks", {"stable": True, "magenta": True, "suno": True})
+    while True:
+        if all(
+            not enabled.get(t, True) or pdf_n in _state[f"{t}_wavs"]
+            for t in ("stable", "magenta", "suno")
+        ):
+            break
         await asyncio.sleep(0.2)
 
 
@@ -502,8 +524,8 @@ async def _analyze_and_generate(pdf_page_nums: list[int]) -> None:
     first_batch = pdf_page_nums[:FIRST_BATCH]
     reader_unlocked = False
 
-    # Analyze pages one at a time; fire generation tasks immediately after each so
-    # Modal GPU work overlaps with the remaining Claude analysis calls.
+    # Analyze pages one at a time; fire local generation tasks immediately after
+    # each so local GPU/MLX work overlaps with the remaining Claude analysis calls.
     for pnum in pdf_page_nums:
         try:
             result = await loop.run_in_executor(None, _analyze_one, pnum)
@@ -529,11 +551,21 @@ async def _analyze_and_generate(pdf_page_nums: list[int]) -> None:
             "tempo_bpm": result["tempo_bpm"],
         })
 
-        # Immediately queue generation for this page
-        for coro in (_gen_stable(pnum), _gen_magenta(pnum), _gen_suno(pnum)):
-            task = asyncio.create_task(coro)
-            task.add_done_callback(lambda t: t.exception() if not t.cancelled() else None)
-            _state["gen_tasks"].append(task)
+        # Immediately queue generation for this page (skip disabled tracks)
+        enabled = _state.get("enabled_tracks", {})
+        for track, coro in [
+            ("stable",  _gen_stable(pnum)  if enabled.get("stable",  True) else None),
+            ("magenta", _gen_magenta(pnum) if enabled.get("magenta", True) else None),
+            ("suno",    _gen_suno(pnum)    if enabled.get("suno",    True) else None),
+        ]:
+            if coro is not None:
+                task = asyncio.create_task(coro)
+                task.add_done_callback(lambda t: t.exception() if not t.cancelled() else None)
+                _state["gen_tasks"].append(task)
+            else:
+                _state[f"{track}_wavs"][pnum] = b""
+                _state["progress"][pnum][track] = True
+                await _broadcast({"type": "progress", "pdf_page": pnum, "track": track, "done": True})
 
     _state["status"] = "generating"
     await _broadcast({"type": "status", "status": "generating"})
@@ -544,16 +576,21 @@ async def _analyze_and_generate(pdf_page_nums: list[int]) -> None:
         nonlocal reader_unlocked
         while not reader_unlocked:
             await asyncio.sleep(0.5)
-            # Unlock as soon as ANY panel has stable audio ready — avoids
-            # blocking on the cold-start container (which hits the first call).
+            # Unlock as soon as ANY panel has ALL enabled tracks done.
+            # Previously only checked stable, which fired immediately when stable
+            # was disabled — causing the reader to unlock before suno was ready.
+            enabled = _state.get("enabled_tracks", {"stable": True, "magenta": True, "suno": True})
             if any(
-                _state["progress"].get(n, {}).get("stable")
+                all(
+                    not enabled.get(t, True) or _state["progress"].get(n, {}).get(t)
+                    for t in ("stable", "magenta", "suno")
+                )
                 for n in pdf_page_nums
             ):
                 reader_unlocked = True
                 _state["status"] = "reader_ready"
                 await _broadcast({"type": "status", "status": "reader_ready"})
-                print("Stable audio ready on first panel — reader unlocked.", flush=True)
+                print("First panel all-tracks ready — reader unlocked.", flush=True)
 
     watch_task = asyncio.create_task(_watch_first_batch())
 
@@ -633,6 +670,7 @@ async def handle_upload(request: web.Request) -> web.Response:
     reader = await request.multipart()
     pdf_bytes = None
     page = 1
+    enabled_tracks: dict = {}
 
     async for part in reader:
         if part.name == "pdf":
@@ -641,6 +679,12 @@ async def handle_upload(request: web.Request) -> web.Response:
             txt = await part.text()
             if txt.strip():
                 page = int(txt)
+        elif part.name == "tracks":
+            txt = await part.text()
+            try:
+                enabled_tracks = json.loads(txt.strip() or "{}")
+            except Exception:
+                enabled_tracks = {}
 
     if not pdf_bytes:
         return web.json_response({"error": "No PDF file received"}, status=400)
@@ -672,6 +716,11 @@ async def handle_upload(request: web.Request) -> web.Response:
         "error": None,
         "full_page_png": full_page_png,
         "panel_boxes": [],
+        "enabled_tracks": {
+            "stable":  bool(enabled_tracks.get("stable",  True)),
+            "magenta": bool(enabled_tracks.get("magenta", True)),
+            "suno":    bool(enabled_tracks.get("suno",    True)),
+        },
     })
 
     pipeline = asyncio.create_task(_panel_pipeline(full_page_png))
@@ -828,28 +877,6 @@ def make_app() -> web.Application:
 # ── Entry point ───────────────────────────────────────────────────────────────
 
 if __name__ == "__main__":
-    import argparse
-
-    parser = argparse.ArgumentParser(description="Comic book audio server")
-    parser.add_argument("--no-stable", action="store_true",
-                        help="Skip Stable Audio 3 (run without Modal GPU)")
-    parser.add_argument("--no-magenta", action="store_true",
-                        help="Skip Magenta MRT2 (run without Modal GPU)")
-    args = parser.parse_args()
-
-    import modal
-
-    if not args.no_stable:
-        print("Connecting to Modal — StableAudioInference…", flush=True)
-        _StableCls = modal.Cls.from_name("webgenta-stability", "StableAudioInference")
-        _stable_cls = _StableCls()
-        print("Stable Audio ready.", flush=True)
-
-    if not args.no_magenta:
-        print("Connecting to Modal — MagentaInference…", flush=True)
-        _MagentaCls = modal.Cls.from_name("webgenta-magenta", "MagentaInference")
-        _magenta_cls = _MagentaCls()
-        print("Magenta ready.", flush=True)
-
+    print("MusicGen (local) and Magenta RT2 small (local MLX) will load on first panel.", flush=True)
     print(f"\nComic Reader → http://localhost:{PORT}/\n", flush=True)
     web.run_app(make_app(), host="localhost", port=PORT, print=False)

@@ -31,7 +31,7 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding-bottom: 240px;
+      padding-bottom: 2rem;
     }
 
     /* ── Screens ─────────────────────────────────────────────────────────── */
@@ -95,6 +95,29 @@
     }
     .range-row input[type=number]:focus { outline: none; border-color: var(--accent); }
     #page-count-hint { color: var(--muted); font-size: .8rem; }
+
+    .track-row {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-top: .5rem;
+    }
+    .track-row .track-label { color: var(--muted); font-size: .9rem; }
+    .track-row label.track-opt {
+      display: flex;
+      align-items: center;
+      gap: .35rem;
+      color: var(--text);
+      font-size: .85rem;
+      cursor: pointer;
+    }
+    .track-row input[type=checkbox] {
+      accent-color: var(--accent);
+      width: 15px;
+      height: 15px;
+      cursor: pointer;
+    }
 
     /* ── Buttons ─────────────────────────────────────────────────────────── */
     button {
@@ -291,107 +314,6 @@
       pointer-events: none;
     }
 
-    /* ── Piano bar (fixed bottom) ────────────────────────────────────────── */
-    #piano-bar {
-      position: fixed; bottom: 0; left: 0; right: 0;
-      background: #191c19;
-      background-image: repeating-linear-gradient(
-        0deg, transparent, transparent 3px,
-        rgba(255,255,255,0.013) 3px, rgba(255,255,255,0.013) 4px
-      );
-      border-top: 2px solid var(--border);
-      padding: 0.4rem 1rem 0.5rem;
-      z-index: 200;
-      display: flex; flex-direction: column; gap: 0.3rem;
-    }
-    #piano-controls {
-      display: flex; align-items: center;
-      justify-content: space-between; gap: 0.5rem;
-    }
-    #piano-transport {
-      display: flex; align-items: center; gap: 0.45rem; flex-shrink: 0;
-    }
-    #piano-tweaks {
-      display: flex; align-items: center; gap: 0.55rem; flex-wrap: wrap;
-      justify-content: flex-end;
-    }
-    #piano-tweaks select {
-      background: var(--bg); border: 1px solid var(--border);
-      color: var(--text); border-radius: 4px; padding: 0.25rem 0.5rem;
-      font-size: 0.75rem; font-family: inherit; max-width: 150px;
-    }
-    #piano-tweaks select:focus { outline: none; border-color: var(--accent-hi); }
-    #piano-tweaks label {
-      display: flex; align-items: center; gap: 0.3rem;
-      color: var(--muted); white-space: nowrap; font-size: 0.75rem;
-    }
-    #piano-tweaks input[type=range] { width: 70px; accent-color: var(--accent); }
-    #piano-play-btn {
-      padding: 0.28rem 0.85rem; font-size: 0.78rem; font-weight: 700;
-      border-radius: 5px;
-    }
-    #piano-explore-btn {
-      padding: 0.28rem 0.85rem; font-size: 0.78rem; font-weight: 600;
-      border-radius: 5px; background: transparent;
-      border: 1px solid var(--border); border-bottom: 1px solid var(--border);
-      color: var(--muted);
-      cursor: pointer; transition: border-color .15s, color .15s, background .15s;
-      transform: none; box-shadow: none;
-    }
-    #piano-explore-btn:hover {
-      border-color: var(--accent); color: var(--text);
-      transform: none; box-shadow: none;
-    }
-    #piano-explore-btn.active {
-      background: #1e2a1e; border-color: var(--accent); color: var(--accent-hi);
-    }
-    #piano-status {
-      font-size: 0.72rem; color: var(--muted);
-      padding: 0.2rem 0.5rem; border-radius: 99px;
-      background: var(--border);
-    }
-    #piano-status.connecting { background: #2a2510; color: #c8a84b; }
-    #piano-status.streaming  { background: #1e2a1e; color: var(--green); }
-    #piano-status.error      { background: #2a1212; color: var(--red); }
-    #piano-key-badge {
-      display: inline-flex; align-items: center;
-      font-size: 0.66rem; font-weight: 600; letter-spacing: .12em;
-      color: var(--accent-hi); background: var(--accent-dim);
-      border: 1px solid var(--border);
-      border-radius: 999px; padding: 0.18rem 0.65rem;
-      text-transform: uppercase;
-    }
-
-    #m-keyboard { position: relative; height: 80px; user-select: none; display: flex; touch-action: none; align-self: center; }
-    .key-white {
-      width: 42px; height: 80px;
-      background: #f7f7f2; border: 1px solid #899878;
-      border-radius: 0 0 5px 5px; flex-shrink: 0;
-      cursor: pointer; position: relative; touch-action: none;
-      display: flex; align-items: flex-end; justify-content: center;
-      padding-bottom: 5px; transition: background .05s;
-    }
-    .key-white.active { background: #e4e6c3; }
-    .key-black {
-      width: 26px; height: 50px;
-      background: #222725; border: 1px solid #121113;
-      border-radius: 0 0 4px 4px; position: absolute; top: 0;
-      z-index: 2; cursor: pointer; touch-action: none; transition: background .05s;
-    }
-    .key-black.active { background: #899878; }
-    .key-label { font-size: 10px; color: #899878; pointer-events: none; }
-    #piano-octave-row {
-      display: flex; gap: 0.4rem; align-items: center;
-      font-size: 0.7rem; color: var(--muted);
-    }
-    #piano-octave-row button {
-      width: 20px; height: 20px; padding: 0; font-size: 13px;
-      border-radius: 3px; line-height: 1;
-      border-bottom: 1px solid #5f6e4d;
-      box-shadow: none;
-    }
-    .key-hint { font-size: 0.68rem; color: var(--muted); margin-left: 0.5rem; }
-
     /* ── Landing page (upload screen) ────────────────────────────────────── */
     #screen-upload { max-width: 1020px; gap: 0; padding-top: 3rem; }
 
@@ -563,6 +485,13 @@
         is generated panel by panel.
       </p>
 
+      <div class="track-row" id="track-row" style="display:none">
+        <span class="track-label">Tracks:</span>
+        <label class="track-opt"><input type="checkbox" id="track-bg"     checked> Background</label>
+        <label class="track-opt"><input type="checkbox" id="track-melody" checked> Melody</label>
+        <label class="track-opt"><input type="checkbox" id="track-voice"  checked> Voice</label>
+      </div>
+
       <button id="generate-btn" disabled>Generate Soundtrack</button>
     </div>
 
@@ -573,7 +502,7 @@
       <div class="section-label">Three layers · three generative models</div>
       <div class="tech-grid">
 
-        <!-- Stable Audio 3 — Stability AI -->
+        <!-- MusicGen — Meta AI -->
         <div class="tech-card stable">
           <div class="tech-icon" style="background:rgba(160,106,217,.16)">
             <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#b888e8"
@@ -584,7 +513,7 @@
             </svg>
           </div>
           <div class="role">Background</div>
-          <h3>Stable Audio 3 <span>· Stability AI</span></h3>
+          <h3>MusicGen <span>· Meta AI</span></h3>
           <p>Generates the ambient instrumental bed for each panel from a rich text prompt.</p>
         </div>
 
@@ -711,39 +640,13 @@
 
   <!-- Audio elements -->
   <audio id="bg-audio" loop></audio>
-  <audio id="melody-audio"></audio>
+  <audio id="melody-audio" loop></audio>
   <audio id="voice-audio"></audio>
-
-  <!-- ── Piano bar (always visible) ───────────────────────────────────── -->
-  <div id="piano-bar">
-    <div id="piano-controls">
-      <div id="piano-transport">
-        <button id="piano-play-btn">▶ Play</button>
-        <button id="piano-explore-btn">⊙ Explore</button>
-        <span id="piano-status">Idle</span>
-      </div>
-      <div id="piano-tweaks">
-        <select id="m-preset-select" title="Style"></select>
-        <label>Vol <input id="m-vol-range" type="range" min="0" max="100" value="70"></label>
-        <label>CFG <input id="m-cfg-range" type="range" min="1" max="7" step="0.5" value="5"></label>
-        <label><input id="m-strum-chk" type="checkbox"> Strum</label>
-      </div>
-    </div>
-    <div id="m-keyboard"></div>
-    <div id="piano-octave-row">
-      <button id="m-oct-dn">−</button>
-      <span id="m-octave-label">C3</span>
-      <button id="m-oct-up">+</button>
-      <span id="piano-key-badge" style="display:none"></span>
-      <span class="key-hint">a–l · w e t y u — black · z/x — octave</span>
-    </div>
-  </div>
 
   <script>
     // ── Config ──────────────────────────────────────────────────────────────
     const MODEL_SERVER   = `${location.hostname}:8766`;
-    const WS_URL         = `ws://${MODEL_SERVER}/ws`;        // comic reader → model_server.py
-    const MAGENTA_WS_URL = `ws://${location.hostname}:8765`; // piano → ws_server.py
+    const WS_URL         = `ws://${MODEL_SERVER}/ws`;
     const API            = `http://${MODEL_SERVER}`;
 
     // ── DOM refs ─────────────────────────────────────────────────────────────
@@ -783,15 +686,16 @@
     const bgAudio     = document.getElementById("bg-audio");
     const melodyAudio = document.getElementById("melody-audio");
     const voiceAudio  = document.getElementById("voice-audio");
-    bgAudio.volume    = 0.05;
-    melodyAudio.volume= 0.4;
-    voiceAudio.volume = 0.25;
+    bgAudio.volume    = 0.15;
+    melodyAudio.volume= 0.25;
+    voiceAudio.volume = 0.4;
 
     // Panel timing: a panel lasts as long as its spoken text (voice), then a
     // short tail. Music tracks play underneath but do NOT extend the panel.
     const PANEL_TAIL_MS = 3000;        // linger 3s after the text/voice finishes
     const PANEL_NO_TEXT_MS = 12000;    // no text/voice → default 12s
     const PANEL_SAFETY_CAP_MS = 60000; // safety if a voice 'ended' never fires
+    const FADE_DURATION_MS = 1500;     // fade-out duration before panel advance
 
     // ── State ────────────────────────────────────────────────────────────────
     let ws              = null;
@@ -804,6 +708,7 @@
     // Panel reveal state
     let panels       = [];   // [{order, box}]
     const mPanelMoods = {}; // 1-based panel number → mood (from 'analyzed' events)
+    const mPanelKeys  = {}; // 1-based panel number → {key, scale, bpm}
     let panelTotal   = 0;
     let curPanel     = 0;    // 0-based index of the panel being shown
     let maskEls      = [];   // overlay divs, one per panel
@@ -850,6 +755,7 @@
       fileMeta.textContent = `${(file.size / 1024 / 1024).toFixed(1)} MB`;
       fileInfo.classList.add("visible");
       rangeRow.style.display = "flex";
+      document.getElementById("track-row").style.display = "flex";
       generateBtn.disabled = true;
       pageCountHint.textContent = "Reading page count…";
 
@@ -878,6 +784,11 @@
       const fd = new FormData();
       fd.append("pdf", selectedFile);
       fd.append("page", pageNum.value || "1");
+      fd.append("tracks", JSON.stringify({
+        stable:  document.getElementById("track-bg").checked,
+        magenta: document.getElementById("track-melody").checked,
+        suno:    document.getElementById("track-voice").checked,
+      }));
 
       try {
         const r = await fetch(`${API}/upload`, { method: "POST", body: fd });
@@ -1121,10 +1032,6 @@
 
     function requestPanel(i) {
       if (i >= panelTotal) { finishReader(); return; }
-      // Reset explore mode silently (don't trigger the Continue logic)
-      mExploreMode = false;
-      mExploreBtn.classList.remove('active');
-      mExploreBtn.textContent = '⊙ Explore';
       curPanel = i;
       pageCounter.textContent = `Panel ${i + 1} / ${panelTotal}`;
       _pendingUrls = { bg: null, melody: null, voice: null };
@@ -1139,24 +1046,6 @@
     function onPanelAudioReady() {
       genBadge.classList.remove("visible");
       revealPanel(curPanel);
-      if (mConnected) {
-        const mood = mPanelMoods[curPanel + 1];
-        if (mood && PIANO_MOOD_PRESET[mood]) {
-          const preset = PIANO_MOOD_PRESET[mood];
-          mPresetSel.value = preset;
-          mCurrentPrompt = preset;
-          mSend('prompt', { text: preset });
-        }
-      }
-      // Remap piano to the panel's detected key/scale
-      const kd = mPanelKeys[curPanel + 1];
-      if (kd?.key && kd?.scale) {
-        mSetKeyScale(kd.key, kd.scale);
-      } else {
-        mScalePitches = null; mCurrentKey = null; mCurrentScale = null;
-        mKeyBadge.style.display = 'none';
-        mUpdateOctave();
-      }
       playPanelAndAdvance(_pendingUrls);
     }
 
@@ -1171,9 +1060,10 @@
 
     function playPanelAndAdvance(urls) {
       stopAll();
-      if (urls.bg)     { bgAudio.src     = urls.bg;     bgAudio.play().catch(()=>{});     setTdot("bg-dot","playing"); }
-      if (urls.melody) { melodyAudio.src = urls.melody; melodyAudio.play().catch(()=>{}); setTdot("melody-dot","playing"); }
-      if (urls.voice)  { voiceAudio.src  = urls.voice;  voiceAudio.play().catch(()=>{});  setTdot("voice-dot","playing"); }
+      console.log("[audio] panel urls:", { bg: !!urls.bg, melody: !!urls.melody, voice: !!urls.voice });
+      if (urls.bg)     { bgAudio.src     = urls.bg;     bgAudio.play().then(()=>console.log("[audio] bg playing")).catch(e=>console.error("[audio] bg error:", e));     setTdot("bg-dot","playing"); }
+      if (urls.melody) { melodyAudio.src = urls.melody; melodyAudio.play().then(()=>console.log("[audio] melody playing")).catch(e=>console.error("[audio] melody error:", e)); setTdot("melody-dot","playing"); }
+      if (urls.voice)  { voiceAudio.src  = urls.voice;  voiceAudio.play().then(()=>console.log("[audio] voice playing")).catch(e=>console.error("[audio] voice error:", e));  setTdot("voice-dot","playing"); }
 
       clearTimeout(advanceTimer);
       let advanced = false;
@@ -1182,8 +1072,7 @@
         advanced = true;
         voiceAudio.onended = null;
         clearTimeout(advanceTimer);
-        stopAll();                  // cut music; panel length is text-driven, not music-driven
-        requestPanel(curPanel + 1);
+        fadeOutAll(FADE_DURATION_MS, () => requestPanel(curPanel + 1));
       };
 
       // Panel length = spoken text (voice) + 3s tail. No text/voice → 5s default.
@@ -1204,13 +1093,38 @@
       stopAll();
       pageCounter.textContent = `Done · ${panelTotal} panel${panelTotal === 1 ? "" : "s"}`;
       replayBtn.style.display = "inline-block";
-      mScalePitches = null;
-      mKeyBadge.style.display = 'none';
-      mUpdateOctave();
     }
 
     function stopAll() {
       [bgAudio, melodyAudio, voiceAudio].forEach(a => { a.pause(); a.currentTime = 0; });
+      bgAudio.volume     = 0.05;
+      melodyAudio.volume = 0.15;
+      voiceAudio.volume  = 0.4;
+    }
+
+    let _fadeRaf = null;
+    function fadeOutAll(durationMs, callback) {
+      if (_fadeRaf) { cancelAnimationFrame(_fadeRaf); _fadeRaf = null; }
+      const t0 = performance.now();
+      const startVols = {
+        bg:     bgAudio.paused     ? 0 : bgAudio.volume,
+        melody: melodyAudio.paused ? 0 : melodyAudio.volume,
+        voice:  voiceAudio.paused  ? 0 : voiceAudio.volume,
+      };
+      function tick(now) {
+        const p = Math.min((now - t0) / durationMs, 1);
+        bgAudio.volume     = startVols.bg     * (1 - p);
+        melodyAudio.volume = startVols.melody * (1 - p);
+        voiceAudio.volume  = startVols.voice  * (1 - p);
+        if (p < 1) {
+          _fadeRaf = requestAnimationFrame(tick);
+        } else {
+          _fadeRaf = null;
+          stopAll();
+          if (callback) callback();
+        }
+      }
+      _fadeRaf = requestAnimationFrame(tick);
     }
 
     function setTdot(id, state) {
@@ -1226,6 +1140,8 @@
     bgAudio.addEventListener("pause", () => setTdot("bg-dot", "ready"));
 
     replayBtn.addEventListener("click", () => {
+      if (_fadeRaf) { cancelAnimationFrame(_fadeRaf); _fadeRaf = null; }
+      stopAll();
       maskEls.forEach(m => m.classList.remove("revealed"));
       replayBtn.style.display = "none";
       requestPanel(0);
@@ -1240,6 +1156,7 @@
     });
 
     backBtn.addEventListener("click", () => {
+      if (_fadeRaf) { cancelAnimationFrame(_fadeRaf); _fadeRaf = null; }
       stopAll();
       if (ws) { ws.close(); ws = null; }
       // Reset upload form
@@ -1256,383 +1173,8 @@
     connectWs();
 
     // ═══════════════════════════════════════════════════════════════════════
-    // ── Piano bar: Magenta RT2 real-time MIDI performance ─────────────────
-    // Separate WebSocket from the comic reader — both connect to ws_server.py
-    // but create independent sessions. Magenta streams binary PCM; comic
-    // streams track audio blobs. Keeping them on separate sockets avoids
-    // ambiguous binary frame demuxing.
+    // Piano bar removed — melody is now auto-generated per panel by Magenta RT2
     // ═══════════════════════════════════════════════════════════════════════
-
-    const PIANO_WORKLET_SRC = `
-const RING = 48000 * 4;
-class MRT2Processor extends AudioWorkletProcessor {
-  constructor() {
-    super();
-    this.ringL = new Float32Array(RING);
-    this.ringR = new Float32Array(RING);
-    this.w = 0; this.r = 0;
-    this.port.onmessage = ({ data }) => {
-      const chunk = data, frames = chunk.length >> 1;
-      for (let i = 0; i < frames; i++) {
-        this.ringL[this.w % RING] = chunk[i * 2];
-        this.ringR[this.w % RING] = chunk[i * 2 + 1];
-        this.w++;
-      }
-    };
-  }
-  process(_i, outputs) {
-    const L = outputs[0]?.[0], R = outputs[0]?.[1];
-    if (!L) return true;
-    const n = L.length, avail = this.w - this.r;
-    if (avail < n) { L.fill(0); R && R.fill(0); return true; }
-    for (let i = 0; i < n; i++) {
-      L[i] = this.ringL[this.r % RING];
-      R && (R[i] = this.ringR[this.r % RING]);
-      this.r++;
-    }
-    return true;
-  }
-}
-registerProcessor('mrt2-processor', MRT2Processor);
-`;
-
-    const PIANO_MOOD_PRESET = {
-      calm: 'ambient pads', tense: 'cinematic strings',
-      action: 'drum and bass', sad: 'lo-fi hip hop',
-      mysterious: 'synthwave', triumphant: 'cinematic strings',
-      neutral: 'jazz piano trio',
-    };
-    const PIANO_PRESETS = [
-      'jazz piano trio','ambient pads','cinematic strings','drum and bass',
-      'lo-fi hip hop','synthwave','funk groove','classical piano',
-      'reggae','metal','bossa nova','bluegrass',
-    ];
-
-    // Musical key/scale lookup tables for per-panel piano remapping
-    const KEY_ROOTS = {
-      'C':0,'C#':1,'Db':1,'D':2,'D#':3,'Eb':3,
-      'E':4,'F':5,'F#':6,'Gb':6,'G':7,'G#':8,'Ab':8,
-      'A':9,'A#':10,'Bb':10,'B':11,
-    };
-    const SCALE_INTERVALS = {
-      major:            [0,2,4,5,7,9,11],
-      minor:            [0,2,3,5,7,8,10],
-      dorian:           [0,2,3,5,7,9,10],
-      pentatonic_major: [0,2,4,7,9],
-      pentatonic_minor: [0,3,5,7,10],
-    };
-    let mScalePitches = null;   // null = chromatic mode; array = in-scale mode
-    let mCurrentKey   = null;   // active key when in scale mode
-    let mCurrentScale = null;   // active scale when in scale mode
-    const mPanelKeys  = {};     // pdf_page → { key, scale, bpm }
-
-    // Key layout
-    let mOctaveBase = 48; // C3
-    const M_WHITE_KEYS    = ['a','s','d','f','g','h','j','k','l'];
-    const M_BLACK_KEYS    = ['w','e',null,'t','y','u',null,'o',null];
-    const M_WHITE_OFFSETS = [0,2,4,5,7,9,11,12,14];
-    const M_BLACK_OFFSETS = [1,3,-1,6,8,10,-1,13,-1];
-    const M_IS_BLACK = [false,true,false,true,false,false,true,false,true,false,true,false];
-    const M_NOTE_NAMES = ['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
-
-    function mKeyToMidi(k) {
-      if (mScalePitches) {
-        const wi = M_WHITE_KEYS.indexOf(k);
-        return (wi >= 0 && wi < mScalePitches.length) ? mScalePitches[wi] : -1;
-      }
-      const wi = M_WHITE_KEYS.indexOf(k);
-      if (wi >= 0) return mOctaveBase + M_WHITE_OFFSETS[wi];
-      const bi = M_BLACK_KEYS.indexOf(k);
-      if (bi >= 0 && M_BLACK_OFFSETS[bi] >= 0) return mOctaveBase + M_BLACK_OFFSETS[bi];
-      return -1;
-    }
-
-    // Audio graph
-    let mActx = null, mWorkletNode = null, mGainNode = null;
-    let mWs = null, mConnected = false;
-    let mCurrentPrompt = 'jazz piano trio';
-
-    // DOM refs
-    const mKeyboard    = document.getElementById('m-keyboard');
-    const mOctLabel    = document.getElementById('m-octave-label');
-    const mPresetSel   = document.getElementById('m-preset-select');
-    const mCfgRange    = document.getElementById('m-cfg-range');
-    const mVolRange    = document.getElementById('m-vol-range');
-    const mStrumChk    = document.getElementById('m-strum-chk');
-    const mPlayBtn     = document.getElementById('piano-play-btn');
-    const mExploreBtn  = document.getElementById('piano-explore-btn');
-    const mStatusBadge = document.getElementById('piano-status');
-    const mKeyBadge    = document.getElementById('piano-key-badge');
-
-    function mSetStatus(cls, text) {
-      mStatusBadge.className = cls;
-      mStatusBadge.textContent = text;
-    }
-
-    function mSend(action, payload = {}) {
-      if (mWs?.readyState === WebSocket.OPEN)
-        mWs.send(JSON.stringify({ service: 'magenta', action, ...payload }));
-    }
-
-    function mSendConfig() {
-      mSend('config', {
-        strum: mStrumChk.checked,
-        cfg_musiccoca: parseFloat(mCfgRange.value),
-        cfg_notes: parseFloat(mCfgRange.value) * 0.6,
-      });
-    }
-
-    // Gain: mute when nothing is held
-    const mHeldNotes = new Set();
-    function mUpdateGain() {
-      if (!mGainNode) return;
-      const vol = mVolRange.value / 100;
-      mGainNode.gain.setTargetAtTime(mHeldNotes.size > 0 ? vol : 0, mActx.currentTime, 0.05);
-    }
-
-    function mNoteOn(n) {
-      if (mHeldNotes.has(n)) return;
-      mHeldNotes.add(n);
-      mKeyboard.querySelectorAll(`[data-note="${n}"]`).forEach(e => e.classList.add('active'));
-      if (!mConnected) mPlayBtn.click();
-      mSend('note_on', { pitch: n, velocity: 100 });
-      mPauseMelody();
-      mUpdateGain();
-    }
-    function mNoteOff(n) {
-      mHeldNotes.delete(n);
-      mKeyboard.querySelectorAll(`[data-note="${n}"]`).forEach(e => e.classList.remove('active'));
-      mSend('note_off', { pitch: n });
-      mUpdateGain();
-    }
-    function mReleaseAll() {
-      for (const n of [...mHeldNotes]) mNoteOff(n);
-    }
-    document.addEventListener('pointerup',     mReleaseAll);
-    document.addEventListener('pointercancel', mReleaseAll);
-
-    // Keyboard shortcuts
-    const mHeldKeys = new Set();
-    document.addEventListener('keydown', e => {
-      if (e.repeat || e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT') return;
-      const k = e.key.toLowerCase();
-      if (k === 'z') { mOctaveBase = Math.max(24, mOctaveBase - 12); mUpdateOctave(); return; }
-      if (k === 'x') { mOctaveBase = Math.min(84, mOctaveBase + 12); mUpdateOctave(); return; }
-      if (mHeldKeys.has(k)) return;
-      mHeldKeys.add(k);
-      const n = mKeyToMidi(k); if (n >= 0) mNoteOn(n);
-    });
-    document.addEventListener('keyup', e => {
-      const k = e.key.toLowerCase(); mHeldKeys.delete(k);
-      const n = mKeyToMidi(k); if (n >= 0) mNoteOff(n);
-    });
-    function mUpdateOctave() {
-      if (mScalePitches && mCurrentKey && mCurrentScale) {
-        // Stay in scale mode — rebuild the scale keyboard at the new octave base
-        mSetKeyScale(mCurrentKey, mCurrentScale);
-      } else {
-        mOctLabel.textContent = 'C' + (Math.floor(mOctaveBase / 12) - 1);
-        mBuildKeyboard();
-      }
-    }
-
-    document.getElementById('m-oct-dn').addEventListener('click', () => { mOctaveBase = Math.max(24, mOctaveBase - 12); mUpdateOctave(); });
-    document.getElementById('m-oct-up').addEventListener('click', () => { mOctaveBase = Math.min(84, mOctaveBase + 12); mUpdateOctave(); });
-
-    // ── Melody-pause-on-play (10 s debounce) ─────────────────────────────
-    let mMelodyResumeTimer = null;
-
-    function mPauseMelody() {
-      if (!melodyAudio.paused) melodyAudio.pause();
-      clearTimeout(mMelodyResumeTimer);
-      mMelodyResumeTimer = setTimeout(() => {
-        mMelodyResumeTimer = null;
-        if (!mExploreMode && melodyAudio.src && melodyAudio.paused)
-          melodyAudio.play().catch(() => {});
-      }, 10000);
-    }
-
-    // ── Explore mode ─────────────────────────────────────────────────────
-    let mExploreMode = false;
-
-    function mSetExplore(on) {
-      mExploreMode = on;
-      mExploreBtn.classList.toggle('active', on);
-      mExploreBtn.textContent = on ? '▶ Continue' : '⊙ Explore';
-      if (on) {
-        clearTimeout(advanceTimer);
-        clearTimeout(mMelodyResumeTimer); mMelodyResumeTimer = null;
-        melodyAudio.pause();
-        voiceAudio.pause();
-      } else {
-        stopAll();
-        requestPanel(curPanel + 1);
-      }
-    }
-
-    mExploreBtn.addEventListener('click', () => mSetExplore(!mExploreMode));
-
-    // Piano keyboard rendering
-    function mBuildKeyboard() {
-      mKeyboard.innerHTML = '';
-      const blacks = [];
-      let wi = 0;
-      for (let n = mOctaveBase; n < mOctaveBase + 15; n++) {
-        const pc = n % 12;
-        if (!M_IS_BLACK[pc]) {
-          const el = document.createElement('div');
-          el.className = 'key-white'; el.dataset.note = n;
-          el.innerHTML = `<span class="key-label">${M_NOTE_NAMES[pc]}${Math.floor(n/12)-1}</span>`;
-          mKeyboard.appendChild(el);
-          wi++;
-        } else {
-          blacks.push({ wi, note: n });
-        }
-      }
-      const W = 42;
-      blacks.forEach(({ wi: w, note }) => {
-        const el = document.createElement('div');
-        el.className = 'key-black'; el.dataset.note = note;
-        el.style.left = (w * W - 9) + 'px';
-        mKeyboard.appendChild(el);
-      });
-      mKeyboard.querySelectorAll('.key-white,.key-black').forEach(el => {
-        el.addEventListener('pointerdown', e => { e.preventDefault(); mNoteOn(+el.dataset.note); });
-        el.addEventListener('pointerup',   () => mNoteOff(+el.dataset.note));
-        el.addEventListener('pointerout',  () => mNoteOff(+el.dataset.note));
-      });
-    }
-
-    function mBuildScaleKeyboard(pitches) {
-      mKeyboard.innerHTML = '';
-      pitches.forEach(note => {
-        const pc = note % 12;
-        const el = document.createElement('div');
-        el.className = 'key-white'; el.dataset.note = note;
-        el.innerHTML = `<span class="key-label">${M_NOTE_NAMES[pc]}${Math.floor(note/12)-1}</span>`;
-        mKeyboard.appendChild(el);
-        el.addEventListener('pointerdown', e => { e.preventDefault(); mNoteOn(note); });
-        el.addEventListener('pointerup',   () => mNoteOff(note));
-        el.addEventListener('pointerout',  () => mNoteOff(note));
-      });
-    }
-
-    function mSetKeyScale(key, scale) {
-      mCurrentKey = key; mCurrentScale = scale;
-      const root = KEY_ROOTS[key] ?? 0;
-      const ivs  = SCALE_INTERVALS[scale] ?? SCALE_INTERVALS.major;
-      const baseOct = Math.floor(mOctaveBase / 12) * 12;
-      const pitches = [];
-      let oct = baseOct;
-      while (pitches.length < 9) {
-        for (const iv of ivs) {
-          if (pitches.length >= 9) break;
-          pitches.push(oct + root + iv);
-        }
-        oct += 12;
-      }
-      mScalePitches = pitches;
-      mBuildScaleKeyboard(pitches);
-      // Octave label shows root note (e.g. "A3") not the chromatic base C
-      const rootOctave = Math.floor(pitches[0] / 12) - 1;
-      mOctLabel.textContent = `${key}${rootOctave}`;
-      // Show key/scale badge
-      const scaleLabel = scale.replace('_', ' ').replace(/\b\w/g, c => c.toUpperCase());
-      mKeyBadge.textContent = `${key} ${scaleLabel}`;
-      mKeyBadge.style.display = '';
-    }
-
-
-    // Preset loading
-    function mPopulatePresets() {
-      mPresetSel.innerHTML = '';
-      PIANO_PRESETS.forEach(name => {
-        const o = document.createElement('option');
-        o.value = name; o.textContent = name;
-        mPresetSel.appendChild(o);
-      });
-    }
-    mPresetSel.addEventListener('change', () => {
-      mCurrentPrompt = mPresetSel.value;
-      mSend('prompt', { text: mCurrentPrompt });
-    });
-
-    // Volume slider respects mute state
-    mVolRange.addEventListener('input', () => {
-      if (mGainNode)
-        mGainNode.gain.setTargetAtTime(mHeldNotes.size > 0 ? mVolRange.value/100 : 0, mActx.currentTime, 0.01);
-    });
-    mCfgRange.addEventListener('input', mSendConfig);
-    mStrumChk.addEventListener('change', mSendConfig);
-
-    // Connect / disconnect
-    async function mConnect() {
-      mSetStatus('connecting', 'Connecting…');
-      mActx = new AudioContext({ sampleRate: 48000 });
-      const blob = new Blob([PIANO_WORKLET_SRC], { type: 'application/javascript' });
-      await mActx.audioWorklet.addModule(URL.createObjectURL(blob));
-      mWorkletNode = new AudioWorkletNode(mActx, 'mrt2-processor', {
-        numberOfOutputs: 1, outputChannelCount: [2],
-      });
-      mGainNode = mActx.createGain();
-      mGainNode.gain.value = 0; // start muted; unmutes on first note
-      mWorkletNode.connect(mGainNode);
-      mGainNode.connect(mActx.destination);
-
-      mWs = new WebSocket(MAGENTA_WS_URL);
-      mWs.binaryType = 'arraybuffer';
-      mWs.onopen = () => {
-        mConnected = true;
-        mSend('start', { prompt: mCurrentPrompt });
-        mSendConfig();
-        mHeldNotes.forEach(n => mSend('note_on', { pitch: n, velocity: 100 }));
-        mPlayBtn.textContent = '■ Stop';
-        mSetStatus('connecting', 'Embedding…');
-      };
-      mWs.onmessage = (e) => {
-        if (e.data instanceof ArrayBuffer) {
-          mWorkletNode.port.postMessage(new Float32Array(e.data));
-        } else {
-          try { mHandleEvent(JSON.parse(e.data)); } catch {}
-        }
-      };
-      mWs.onerror = () => { mSetStatus('error', 'WS error'); mTeardown(); };
-      mWs.onclose = () => mTeardown();
-    }
-
-    function mHandleEvent(msg) {
-      if (msg.service !== 'magenta') return;
-      if (msg.event === 'status' && msg.state === 'embedding') {
-        mSetStatus('connecting', 'Embedding…');
-      } else if (msg.event === 'ready') {
-        mSetStatus('streaming', 'Streaming');
-      } else if (msg.event === 'stopped') {
-        mTeardown();
-      } else if (msg.event === 'error') {
-        mSetStatus('error', msg.message || 'error'); mTeardown();
-      }
-    }
-
-    function mTeardown() {
-      mConnected = false;
-      mReleaseAll();
-      mWs?.close(); mWs = null;
-      mWorkletNode?.disconnect(); mWorkletNode = null;
-      mGainNode?.disconnect(); mGainNode = null;
-      mActx?.close(); mActx = null;
-      mPlayBtn.textContent = '▶ Play';
-      mSetStatus('', 'Idle');
-    }
-
-    mPlayBtn.addEventListener('click', async () => {
-      if (mConnected) { mSend('stop'); mTeardown(); return; }
-      try { await mConnect(); }
-      catch (e) { mSetStatus('error', String(e)); mTeardown(); }
-    });
-
-    // Init
-    mPopulatePresets();
-    mUpdateOctave();
   </script>
 </body>
 </html>

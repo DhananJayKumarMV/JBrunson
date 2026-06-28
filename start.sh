@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 # start.sh -- Comic Reader launcher (macOS / Linux)
-# Usage: bash start.sh [--no-stable] [--no-magenta]
 
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")" && pwd)"

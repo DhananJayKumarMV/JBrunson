@@ -4,11 +4,16 @@ aiohttp
 numpy
 pydantic
 
-# vision analysis (pdf_reader.py --analyze + model_server.py): needs ANTHROPIC_API_KEY
+# vision analysis: needs ANTHROPIC_API_KEY
 anthropic
 
-# Modal GPU (model_server.py): needs Modal auth + deployed apps
-modal
+# background music (local, Apple MPS) — audiocraft fails on Python 3.13, use transformers
+transformers
+accelerate
+scipy
 
-# voice track: transcode Suno's Opus-in-MP4 -> browser-playable MP3 (static ffmpeg)
+# melody (local, Apple MLX) — model files expected at ~/Documents/Magenta/magenta-rt-v2
+magenta-rt[mlx]
+
+# voice track: transcode Suno's Opus-in-MP4 -> browser-playable MP3
 imageio-ffmpeg
